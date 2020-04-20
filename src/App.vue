@@ -78,7 +78,8 @@ export default Vue.extend({
 }
 
 #canvas {
-  background: green;
+  background-image: url(assets/grass-1.jpg);
+  background-size: 10%;
   display: block;
   margin: 0 auto;
   box-shadow: 0 0 10px #2c1f34;

@@ -1,4 +1,7 @@
+import roadImage from '@/assets/ground-1.jpg';
+
 export default {
+  roadImage,
   roadMap: [
     { posX: 0, posY: 7 },
     { posX: 1, posY: 7 },
@@ -36,5 +39,4 @@ export default {
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
   ],
-  roadColor: '#d4b96c',
 };

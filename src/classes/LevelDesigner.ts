@@ -1,13 +1,17 @@
 import Vue from 'vue';
 import { TLevelDesignerState } from '@/types/TLevelDesignerState';
 import { TMapsItem } from '@/types/TMapsItem';
-import { painter } from '@/classes/Painter';
+import { canvas } from '@/classes/Canvas';
 import { mapsRepository } from '@/classes/LevelMapsRepository';
 
 class LevelDesigner {
   #state: TLevelDesignerState = Vue.observable({
     interactiveCellSize: 0,
   });
+
+  private get cellSize() {
+    return this.#state.interactiveCellSize;
+  }
 
   public init(canvasWidth: number) {
     this.setInteractiveCellSize(canvasWidth);
@@ -16,25 +20,28 @@ class LevelDesigner {
   public drawRoad(levelNumber: number) {
     const {
       roadMap,
-      roadColor,
+      roadImage,
     } = mapsRepository.get(levelNumber);
 
-    const cellSize = this.#state.interactiveCellSize;
+    const roadBg = new Image(this.cellSize, this.cellSize);
 
-    roadMap.forEach((map: TMapsItem) => {
-      painter.fillRect(
-        map.posX * cellSize,
-        map.posY * cellSize,
-        cellSize + 1, // plus one to hide emptiness between cells
-        cellSize + 1, // plus one to hide emptiness between cells
-        roadColor,
-      );
-    });
+    roadBg.src = roadImage;
+    roadBg.onload = () => {
+      roadMap.forEach((map: TMapsItem) => {
+        canvas.context.drawImage(
+          roadBg,
+          map.posX * this.cellSize,
+          map.posY * this.cellSize,
+          this.cellSize + 1, // plus one to hide emptiness between cells
+          this.cellSize + 1, // plus one to hide emptiness between cells
+        );
+      });
+    };
   }
 
   private setInteractiveCellSize(canvasWidth: number) {
     /*
-      canvas includes
+      canvas have
       25 interactive cells on X and
       16 on Y with current ratio
     */
