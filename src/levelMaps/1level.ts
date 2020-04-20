@@ -36,4 +36,5 @@ export default {
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
   ],
+  roadColor: '#d4b96c',
 };

@@ -10,11 +10,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 import { TCanvasStyles } from '@/types/TCanvasStyles';
-import { TMapsItem } from '@/types/TMapsItem';
+
 import { canvas } from '@/classes/Canvas';
 import { painter } from '@/classes/Painter';
-import { mapsRepository } from '@/classes/LevelMapsRepository';
+import { levelDesigner } from '@/classes/LevelDesigner';
 
 export default Vue.extend({
   name: 'App',
@@ -45,29 +46,16 @@ export default Vue.extend({
 
       await canvas.init();
       painter.init(canvas.context);
+      levelDesigner.init(canvas.width);
 
       this.drawAll();
     },
 
     drawAll() {
       canvas.clear();
+      levelDesigner.drawRoad(this.levelNumber);
 
-      this.drawRoad();
-    },
-
-    drawRoad() {
-      const { roadMap } = mapsRepository.get(this.levelNumber);
-      const cellSize = canvas.interactiveCellSize;
-
-      roadMap.forEach((map: TMapsItem) => {
-        painter.fillRect(
-          map.posX * cellSize,
-          map.posY * cellSize,
-          cellSize + 1, // plus one to hide emptiness between cells
-          cellSize + 1, // plus one to hide emptiness between cells
-          '#d4b96c',
-        );
-      });
+      // this.animRequestId = window.requestAnimationFrame(this.drawAll);
     },
 
     onResize() {
