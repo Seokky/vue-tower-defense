@@ -1,29 +1,77 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <canvas
+      id="canvas"
+      ref="canvas"
+      :style="styles"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { TCanvasStyles } from '@/types/TCanvasStyles';
+import { canvas } from '@/classes/Canvas';
+import { painter } from '@/classes/Painter';
 
 export default Vue.extend({
   name: 'App',
-  components: {
-    HelloWorld,
+
+  data() {
+    return {
+      animRequestId: 0,
+      resizeTimeoutId: 0,
+    };
+  },
+
+  computed: {
+    styles(): TCanvasStyles {
+      return canvas.styles;
+    },
+  },
+
+  mounted() {
+    this.initApp();
+
+    window.addEventListener('resize', this.onResize);
+  },
+
+  methods: {
+    async initApp() {
+      window.cancelAnimationFrame(this.animRequestId);
+
+      await canvas.init();
+
+      this.drawAll();
+    },
+
+    drawAll() {
+      canvas.clear();
+    },
+
+    onResize() {
+      window.clearTimeout(this.resizeTimeoutId);
+
+      this.resizeTimeoutId = setTimeout(this.initApp, 300);
+    },
   },
 });
 </script>
 
 <style lang="scss">
+@import '@/styles/reset';
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+#canvas {
+  background: green;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 0 10px #2c1f34;
 }
 </style>
