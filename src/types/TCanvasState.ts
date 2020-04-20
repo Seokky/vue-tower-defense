@@ -3,4 +3,5 @@ export type TCanvasState = {
   ctx: CanvasRenderingContext2D | null;
   width: number;
   height: number;
+  interactiveCellSize: number;
 }

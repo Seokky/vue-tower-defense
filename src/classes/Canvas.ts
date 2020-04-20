@@ -3,12 +3,14 @@ import { TCanvasState } from '@/types/TCanvasState';
 import { TCanvasStyles } from '@/types/TCanvasStyles';
 import { CANVAS_MAX_WIDTH } from '@/constants';
 
+const ratio = 1.5625;
 class Canvas {
   #state: TCanvasState = Vue.observable({
     el: null as HTMLCanvasElement | null,
     ctx: null as CanvasRenderingContext2D | null,
     width: 0 as number,
     height: 0 as number,
+    interactiveCellSize: 0,
   });
 
   get el(): HTMLCanvasElement {
@@ -27,6 +29,10 @@ class Canvas {
     return this.#state.height;
   }
 
+  get interactiveCellSize() {
+    return this.#state.interactiveCellSize;
+  }
+
   get styles(): TCanvasStyles {
     return {
       width: `${this.width}px`,
@@ -38,6 +44,7 @@ class Canvas {
     this.setElement();
     this.setContext();
     await this.setSizes();
+    this.setInteractiveCellSize();
 
     return Promise.resolve();
   }
@@ -55,7 +62,18 @@ class Canvas {
   }
 
   private static getHeightDependsOnWidth(width: number) {
-    return width / 1.5;
+    return width / ratio;
+  }
+
+  private setInteractiveCellSize() {
+    /*
+      canvas includes
+      25 interactive cells on X and
+      16 on Y with current ratio
+    */
+    this.#state.interactiveCellSize = Number(
+      (this.width / 25).toFixed(3),
+    );
   }
 
   private setSizes() {

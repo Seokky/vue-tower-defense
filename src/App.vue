@@ -11,14 +11,17 @@
 <script lang="ts">
 import Vue from 'vue';
 import { TCanvasStyles } from '@/types/TCanvasStyles';
+import { TMapsItem } from '@/types/TMapsItem';
 import { canvas } from '@/classes/Canvas';
 import { painter } from '@/classes/Painter';
+import { mapsRepository } from '@/classes/LevelMapsRepository';
 
 export default Vue.extend({
   name: 'App',
 
   data() {
     return {
+      levelNumber: 1,
       animRequestId: 0,
       resizeTimeoutId: 0,
     };
@@ -41,12 +44,30 @@ export default Vue.extend({
       window.cancelAnimationFrame(this.animRequestId);
 
       await canvas.init();
+      painter.init(canvas.context);
 
       this.drawAll();
     },
 
     drawAll() {
       canvas.clear();
+
+      this.drawRoad();
+    },
+
+    drawRoad() {
+      const { roadMap } = mapsRepository.get(this.levelNumber);
+      const cellSize = canvas.interactiveCellSize;
+
+      roadMap.forEach((map: TMapsItem) => {
+        painter.fillRect(
+          map.posX * cellSize,
+          map.posY * cellSize,
+          cellSize + 1, // plus one to hide emptiness between cells
+          cellSize + 1, // plus one to hide emptiness between cells
+          '#d4b96c',
+        );
+      });
     },
 
     onResize() {
