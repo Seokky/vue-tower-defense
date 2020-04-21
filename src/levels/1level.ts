@@ -1,4 +1,6 @@
-import roadImage from '@/assets/ground-1.jpg';
+import roadImage from '@/assets/img/ground-1.jpg';
+
+const unitsCount = 10;
 
 export default {
   roadImage,
@@ -39,4 +41,8 @@ export default {
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
   ],
+  units: Array(unitsCount)
+    .fill('pistachio', 0, 5)
+    .fill('pistachioIll', 5, 10),
+  spawnDelay: 2000, // ms
 };
