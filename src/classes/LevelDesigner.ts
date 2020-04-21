@@ -11,15 +11,15 @@ import { UnitFactory } from '@/classes/UnitFactory';
 class LevelDesigner {
   #state: TLevelDesignerState = Vue.observable({
     levelNumber: 0,
-    units: [] as any[], // currently used units
+    units: [] as Unit[], // currently used units
     start: [0, 0], // [x, y] - coords of point that units start
     assets: { // assets to preload
-      road: '',
+      road: new Image(),
     },
   });
 
   get spawnDelay() {
-    return levelsRepository.get(this.level).spawnDelay as number;
+    return levelsRepository.get(this.level).spawnDelay;
   }
 
   get unitsCount() {
@@ -72,7 +72,7 @@ class LevelDesigner {
   }
 
   public drawUnits() {
-    this.#state.units.forEach((unit: any) => {
+    this.#state.units.forEach((unit: Unit) => {
       unit.draw();
     });
   }
@@ -91,7 +91,7 @@ class LevelDesigner {
   }
 
   public moveUnits() {
-    this.#state.units.forEach((unit: any) => {
+    this.#state.units.forEach((unit: Unit) => {
       unit.move();
     });
   }
