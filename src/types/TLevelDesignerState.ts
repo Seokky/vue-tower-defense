@@ -1,8 +1,10 @@
+import { Unit } from '@/classes/units/Unit';
+
 export type TLevelDesignerState = {
   levelNumber: number;
-  units: any[];
+  units: Unit[];
   start: [number, number];
   assets: {
-    road: any;
+    road: HTMLImageElement;
   };
 }

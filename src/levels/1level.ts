@@ -1,9 +1,12 @@
 import roadImage from '@/assets/img/ground-1.jpg';
+import { TMapsItem } from '@/types/TMapsItem';
+import { TLevelDataset } from '@/types/TLevelDataset';
 
 const unitsCount = 6;
 
 export default {
   roadImage,
+
   roadMap: [
     { posX: 0, posY: 7 },
     { posX: 1, posY: 7 },
@@ -40,9 +43,12 @@ export default {
     { posX: 22, posY: 3 },
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
-  ],
+  ] as TMapsItem[],
+
   units: Array(unitsCount)
-    .fill('pistachio', 0, 3)
-    .fill('pistachioIll', 3, unitsCount),
+    .fill('Bilberry', 0, 1)
+    .fill('Pistachio', 1, 3)
+    .fill('PistachioIll', 3, unitsCount),
+
   spawnDelay: 6000, // ms
-};
+} as TLevelDataset;

@@ -3,22 +3,23 @@ import Vue from 'vue';
 import { TLevelDesignerState } from '@/types/TLevelDesignerState';
 import { TMapsItem } from '@/types/TMapsItem';
 
+import { Unit } from '@/classes/units/Unit';
 import { canvas } from '@/classes/Canvas';
 import { levelsRepository } from '@/classes/LevelsRepository';
-import { unitFactory } from '@/classes/UnitFactory';
+import { UnitFactory } from '@/classes/UnitFactory';
 
 class LevelDesigner {
   #state: TLevelDesignerState = Vue.observable({
     levelNumber: 0,
-    units: [] as any[], // currently used units
+    units: [] as Unit[], // currently used units
     start: [0, 0], // [x, y] - coords of point that units start
     assets: { // assets to preload
-      road: '',
+      road: new Image(),
     },
   });
 
   get spawnDelay() {
-    return levelsRepository.get(this.level).spawnDelay as number;
+    return levelsRepository.get(this.level).spawnDelay; // ms
   }
 
   get unitsCount() {
@@ -71,18 +72,14 @@ class LevelDesigner {
   }
 
   public drawUnits() {
-    this.#state.units.forEach((unit: any) => {
+    this.#state.units.forEach((unit: Unit) => {
       unit.draw();
     });
   }
 
-  public async createUnit(unitNumber: number) {
-    const { units } = levelsRepository.get(this.level);
-
-    const unitName = units[unitNumber];
-    const UnitConstructor = unitFactory.get(unitName);
-
-    const unit = new UnitConstructor(
+  public async createUnit(unitIdx: number) {
+    const unit: Unit = UnitFactory.createUnit(
+      this.getUnitNameByIndex(unitIdx),
       LevelDesigner.cellSize,
       this.startCoords.x,
       this.startCoords.y,
@@ -91,12 +88,10 @@ class LevelDesigner {
     await unit.loadImage();
 
     this.#state.units.push(unit);
-
-    return unit;
   }
 
   public moveUnits() {
-    this.#state.units.forEach((unit: any) => {
+    this.#state.units.forEach((unit: Unit) => {
       unit.move();
     });
   }
@@ -121,6 +116,12 @@ class LevelDesigner {
 
     this.#state.start[0] = roadMap[0].posX;
     this.#state.start[1] = roadMap[0].posY;
+  }
+
+  private getUnitNameByIndex(index: number) {
+    const { units } = levelsRepository.get(this.level);
+
+    return units[index];
   }
 }
 
