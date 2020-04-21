@@ -44,5 +44,5 @@ export default {
   units: Array(unitsCount)
     .fill('pistachio', 0, 3)
     .fill('pistachioIll', 3, unitsCount),
-  spawnDelay: 2000, // ms
+  spawnDelay: 6000, // ms
 };
