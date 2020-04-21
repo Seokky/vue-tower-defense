@@ -4,4 +4,5 @@ export type TCanvasState = {
   width: number;
   height: number;
   offsetTop: number;
+  interactiveCellSize: number;
 }

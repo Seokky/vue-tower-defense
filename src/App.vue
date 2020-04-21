@@ -50,7 +50,7 @@ export default Vue.extend({
       window.cancelAnimationFrame(this.animRequestId);
 
       await canvas.init();
-      await levelDesigner.init(canvas.width, this.levelNumber);
+      await levelDesigner.init(this.levelNumber);
       await this.unitsConveyer(0);
 
       this.drawAll();
