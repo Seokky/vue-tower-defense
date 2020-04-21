@@ -8,12 +8,16 @@ class Canvas {
   #state: TCanvasState = Vue.observable({
     el: null as HTMLCanvasElement | null,
     ctx: null as CanvasRenderingContext2D | null,
-    width: 0 as number,
-    height: 0 as number,
+    width: 0,
+    height: 0,
+    offsetTop: 0,
   });
 
   get el(): HTMLCanvasElement {
-    return this.#state.el! || { styles: {} };
+    return this.#state.el! || {
+      styles: {},
+      offsetTop: 0,
+    };
   }
 
   get context(): CanvasRenderingContext2D {
@@ -28,6 +32,10 @@ class Canvas {
     return this.#state.height;
   }
 
+  get offsetTop() {
+    return this.#state.offsetTop;
+  }
+
   get styles(): TCanvasStyles {
     return {
       width: `${this.width}px`,
@@ -39,6 +47,7 @@ class Canvas {
     this.setElement();
     this.setContext();
     await this.setSizes();
+    this.setOffsetTop();
 
     return Promise.resolve();
   }
@@ -87,6 +96,10 @@ class Canvas {
 
       resolve();
     });
+  }
+
+  private setOffsetTop() {
+    this.#state.offsetTop = this.el.offsetTop;
   }
 }
 

@@ -5,6 +5,8 @@
       ref="canvas"
       :style="styles"
     />
+
+    <LevelUserInterface :level-number="levelNumber" />
   </div>
 </template>
 
@@ -17,8 +19,12 @@ import { canvas } from '@/classes/Canvas';
 import { painter } from '@/classes/Painter';
 import { levelDesigner } from '@/classes/LevelDesigner';
 
+import LevelUserInterface from '@/components/LevelUserInterface/LevelUserInterface.vue';
+
 export default Vue.extend({
-  name: 'App',
+  components: {
+    LevelUserInterface,
+  },
 
   data() {
     return {
