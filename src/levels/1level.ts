@@ -1,4 +1,6 @@
 import roadImage from '@/assets/img/ground-1.jpg';
+import { TMapsItem } from '@/types/TMapsItem';
+import { TLevelDataset } from '@/types/TLevelDataset';
 
 const unitsCount = 6;
 
@@ -40,9 +42,9 @@ export default {
     { posX: 22, posY: 3 },
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
-  ],
+  ] as TMapsItem[],
   units: Array(unitsCount)
     .fill('pistachio', 0, 3)
     .fill('pistachioIll', 3, unitsCount),
   spawnDelay: 6000, // ms
-};
+} as TLevelDataset;
