@@ -19,7 +19,7 @@ class LevelDesigner {
   });
 
   get spawnDelay() {
-    return levelsRepository.get(this.level).spawnDelay;
+    return levelsRepository.get(this.level).spawnDelay; // ms
   }
 
   get unitsCount() {

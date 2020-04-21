@@ -6,6 +6,7 @@ const unitsCount = 6;
 
 export default {
   roadImage,
+
   roadMap: [
     { posX: 0, posY: 7 },
     { posX: 1, posY: 7 },
@@ -43,8 +44,11 @@ export default {
     { posX: 23, posY: 3 },
     { posX: 24, posY: 3 },
   ] as TMapsItem[],
+
   units: Array(unitsCount)
-    .fill('Pistachio', 0, 3)
+    .fill('Bilberry', 0, 1)
+    .fill('Pistachio', 1, 3)
     .fill('PistachioIll', 3, unitsCount),
+
   spawnDelay: 6000, // ms
 } as TLevelDataset;
