@@ -3,9 +3,10 @@ import Vue from 'vue';
 import { TLevelDesignerState } from '@/types/TLevelDesignerState';
 import { TMapsItem } from '@/types/TMapsItem';
 
+import { Unit } from '@/classes/units/Unit';
 import { canvas } from '@/classes/Canvas';
 import { levelsRepository } from '@/classes/LevelsRepository';
-import { unitFactory } from '@/classes/UnitFactory';
+import { UnitFactory } from '@/classes/UnitFactory';
 
 class LevelDesigner {
   #state: TLevelDesignerState = Vue.observable({
@@ -76,13 +77,9 @@ class LevelDesigner {
     });
   }
 
-  public async createUnit(unitNumber: number) {
-    const { units } = levelsRepository.get(this.level);
-
-    const unitName = units[unitNumber];
-    const UnitConstructor = unitFactory.get(unitName);
-
-    const unit = new UnitConstructor(
+  public async createUnit(unitIdx: number) {
+    const unit: Unit = UnitFactory.createUnit(
+      this.getUnitNameByIndex(unitIdx),
       LevelDesigner.cellSize,
       this.startCoords.x,
       this.startCoords.y,
@@ -91,8 +88,6 @@ class LevelDesigner {
     await unit.loadImage();
 
     this.#state.units.push(unit);
-
-    return unit;
   }
 
   public moveUnits() {
@@ -121,6 +116,12 @@ class LevelDesigner {
 
     this.#state.start[0] = roadMap[0].posX;
     this.#state.start[1] = roadMap[0].posY;
+  }
+
+  private getUnitNameByIndex(index: number) {
+    const { units } = levelsRepository.get(this.level);
+
+    return units[index];
   }
 }
 
