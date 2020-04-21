@@ -17,6 +17,14 @@ class LevelDesigner {
     },
   });
 
+  get spawnDelay() {
+    return levelsRepository.get(this.level).spawnDelay;
+  }
+
+  get unitsCount() {
+    return levelsRepository.get(this.level).units.length;
+  }
+
   private get cellSize() {
     return this.#state.interactiveCellSize;
   }
@@ -82,16 +90,16 @@ class LevelDesigner {
     return unit;
   }
 
-  public drawUnit(unitNumber: number) {
-    const unit = this.#state.units[unitNumber];
-
-    unit.draw();
+  public drawUnits() {
+    this.#state.units.forEach((unit: any) => {
+      unit.draw();
+    });
   }
 
-  public moveUnit(unitNumber: number) {
-    const unit = this.#state.units[unitNumber];
-
-    unit.move();
+  public moveUnits() {
+    this.#state.units.forEach((unit: any) => {
+      unit.move();
+    });
   }
 
   private loadAssets() {

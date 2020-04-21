@@ -51,16 +51,29 @@ export default Vue.extend({
 
       await canvas.init();
       await levelDesigner.init(canvas.width, this.levelNumber);
-      await levelDesigner.createUnit(6);
+      await this.unitsConveyer(0);
 
       this.drawAll();
+    },
+
+    async unitsConveyer(unitIndex: number) {
+      await levelDesigner.createUnit(unitIndex);
+
+      const nextUnitIndex = unitIndex + 1;
+
+      if (nextUnitIndex < levelDesigner.unitsCount) {
+        setTimeout(
+          this.unitsConveyer.bind(this, nextUnitIndex),
+          levelDesigner.spawnDelay,
+        );
+      }
     },
 
     drawAll() {
       canvas.clear();
       levelDesigner.drawRoad();
-      levelDesigner.moveUnit(0);
-      levelDesigner.drawUnit(0);
+      levelDesigner.moveUnits();
+      levelDesigner.drawUnits();
 
       this.animRequestId = window.requestAnimationFrame(this.drawAll);
     },
