@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import { TLevelDesignerState } from '@/types/TLevelDesignerState';
 import { TMapsItem } from '@/types/TMapsItem';
+import { TLevelDataset } from '@/types/TLevelDataset';
 
 import { Unit } from '@/classes/units/Unit';
 import { canvas } from '@/classes/Canvas';
@@ -11,6 +12,7 @@ import { UnitFactory } from '@/classes/UnitFactory';
 class LevelDesigner {
   #state: TLevelDesignerState = Vue.observable({
     levelNumber: 0,
+    levelDataset: {} as TLevelDataset,
     units: [] as Unit[], // currently used units
     start: [0, 0], // [x, y] - coords of point that units start
     assets: { // assets to preload
@@ -18,16 +20,12 @@ class LevelDesigner {
     },
   });
 
-  get spawnDelay() {
-    return levelsRepository.get(this.level).spawnDelay; // ms
-  }
-
-  get unitsCount() {
-    return levelsRepository.get(this.level).units.length;
-  }
-
   private get level() {
     return this.#state.levelNumber;
+  }
+
+  private get dataset(): TLevelDataset {
+    return this.#state.levelDataset;
   }
 
   private get startCoords() {
@@ -46,16 +44,13 @@ class LevelDesigner {
   }
 
   public async init(level: number) {
-    this.#state.levelNumber = level;
-
+    this.changeLevel(level);
     this.setStartCoords();
     await this.loadAssets();
   }
 
   public drawRoad() {
-    const { roadMap } = levelsRepository.get(this.level);
-
-    roadMap.forEach((map: TMapsItem) => {
+    this.dataset.roadMap.forEach((map: TMapsItem) => {
       const xWithRatio = map.posX * LevelDesigner.cellSize;
       const yWithRatio = map.posY * LevelDesigner.cellSize;
       const width = LevelDesigner.cellSize;
@@ -96,15 +91,25 @@ class LevelDesigner {
     });
   }
 
-  private loadAssets() {
-    /* road background image */
-    const { roadImage } = levelsRepository.get(this.level);
+  private changeLevel(level: number) {
+    this.#state.levelNumber = level;
 
+    const {
+      roadImage, roadMap, units, spawnDelay,
+    } = levelsRepository.get(this.level);
+
+    this.#state.levelDataset.roadImage = roadImage;
+    this.#state.levelDataset.roadMap = roadMap;
+    this.#state.levelDataset.units = units;
+    this.#state.levelDataset.spawnDelay = spawnDelay;
+  }
+
+  private loadAssets() {
     this.#state.assets.road = new Image(
       LevelDesigner.cellSize,
       LevelDesigner.cellSize,
     );
-    this.#state.assets.road.src = roadImage;
+    this.#state.assets.road.src = this.dataset.roadImage;
 
     return new Promise((resolve) => {
       this.#state.assets.road.onload = () => resolve();
@@ -112,16 +117,12 @@ class LevelDesigner {
   }
 
   private setStartCoords() {
-    const { roadMap } = levelsRepository.get(this.level);
-
-    this.#state.start[0] = roadMap[0].posX;
-    this.#state.start[1] = roadMap[0].posY;
+    this.#state.start[0] = this.dataset.roadMap[0].posX;
+    this.#state.start[1] = this.dataset.roadMap[0].posY;
   }
 
   private getUnitNameByIndex(index: number) {
-    const { units } = levelsRepository.get(this.level);
-
-    return units[index];
+    return this.dataset.units[index];
   }
 }
 
